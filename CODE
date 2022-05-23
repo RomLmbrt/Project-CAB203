@@ -1,0 +1,37 @@
+def traverseBork(bork):
+   # code your solution here
+    queue = [bork.restart()] #string de depart
+    map = {}
+    
+    while queue != [] :
+        n = queue.pop(0)
+        map[n]=bork.exits(n)
+        for z in map[n]:
+            if z not in map:
+   # Access the bork automator like so:
+   bork.restart()
+   location = bork.description()
+   exits = bork.exits()
+   exit = "???"
+   bork.move(exit)
+   saveGame = bork.save()
+   bork.restore(saveGame)
+
+   # Access functions from the imported files like this:
+   n = graphs.N(V, E, u)
+   t = digraphs.topOrdering(V, E)
+
+   return map
+
+# The following will be run if you execute the file like python3 bork_n1234567.py
+# Your solution should not depend on this code.
+if __name__ == "__main__":
+   import borkAutomator
+   bork = borkAutomator.Bork()
+   print(traverseBork(bork))
+
+   try:
+      borkHC = borkAutomator.Bork(hardCore=True)
+      print(traverseBorkHardCore(borkHC))
+   except NameError:
+      print("Not attempting hard core mode")
