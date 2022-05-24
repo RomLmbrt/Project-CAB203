@@ -1,19 +1,9 @@
-import graphs
-import digraphs
+import borkAutomator
+bork = borkAutomator.Bork()
 
-# You can define some helper functions here if you like!
+# Some helper functions used later in traverseBork and traverseBorkHardCore
 
-def exitsNotInMap(exits, map):
-    count = 0
-    for exit in exits :
-        k = 0
-        for elt in map :
-            if elt == exits[exit] :
-                k+=1
-        if ( k==0 ) :
-            count +=1
-    return (count != 0)
-        
+#Return True if the exit endpoint is not in map
 def exitNotInMap(exit, map):
     count = 0
     for elt in map :
@@ -21,86 +11,102 @@ def exitNotInMap(exit, map):
             count+=1
     return (count == 0)
 
+#Return True if there is at least one exit endpoint in exits that is not in map
+def exitsNotInMap(exits, map):
+    count = 0
+    for exit in exits :
+        if ( exitNotInMap(exits[exit], map) ):
+            count+=1
+    return (count != 0)
+
+#The main functions
+
+#Return the map in normal mode
 def traverseBork(bork):
     bork.restart()
     saveGame=bork.save()
     map={}
-   
+    
+    #Recursive function that visits the unvisited spots 
+    #or comes back if there is no more unvisited spot remaining from the very location
+    
     def visiteOrCallback(map, saveGame):
         newSaveGame = bork.save()
         location = bork.description()
         map[location]={}
         
+        #Add the exits to the very location in map
         for exit in bork.exits() :
             bork.move(exit)
             map[location][exit] = bork.description()
             bork.restore(newSaveGame)
             
-        #something to visit
-        while ( exitsNotInMap(map[location], map ) == True ) :
+        #Moves to the next unvisited spots
+        while exitsNotInMap(map[location], map ):
             for exit in map[location]:
                 if (exitNotInMap(map[location][exit], map)):
                     bork.move(exit)
-                    map = visiteOrCallback(map, newSaveGame)
+                    visiteOrCallback(map, newSaveGame)
                      
-        #nothing to visit
+        #Comes back to the last spot
         bork.restore(saveGame)
-        return(map)
     
     visiteOrCallback(map, saveGame)
 
     return map
 
-# To play in hard core mode, define the function traverseBorkHardCore(bork)
-# You shoud also define traverseBork either way!
+# The hard core mode
 
+#Moves the player to its last spot
 def comeBack(memory):
     bork.restart()
     for exit in memory :
         bork.move(exit)
 
+#Return the map in hard core mode
 def traverseBorkHardCore(bork):
     bork.restart()
     map={}
     memory=[]
+    
+    #Recursive function that visits the unvisited spots 
+    #or comes back if there is no more unvisited spot remaining from the very location
    
-    def visiteOrCallback(map, memory):
+    def visiteOrCallbackHC(map, memory):
         location = bork.description()
         map[location]={}
         
+        #Add the exits to the very location in map
         for exit in bork.exits() : 
             bork.move(exit)
             map[location][exit] = bork.description()
             comeBack(memory)
             
-        #something to visit
+        #Moves to the next unvisited spots
         while ( exitsNotInMap(map[location], map ) == True ) :
             for exit in map[location]:
                 if (exitNotInMap(map[location][exit], map)):
                     bork.move(exit)
                     memory.append(exit)
-                    visiteOrCallback(map, memory)
+                    visiteOrCallbackHC(map, memory)
                      
-        #nothing to visit
+        #Comes back to the last spot
         if memory!=[]:
             memory.pop()
         comeBack(memory)
        
     
-    visiteOrCallback(map, memory)
+    visiteOrCallbackHC(map, memory)
 
     return map
 
-# The following will be run if you execute the file like python3 bork_n1234567.py
-# Your solution should not depend on this code.
-if __name__ == "__main__":
-   import borkAutomator
-   bork = borkAutomator.Bork()
-   print(traverseBork(bork))
+# Run traverseBork and traversBorkHardCore
 
-   try:
-      borkHC = borkAutomator.Bork(hardCore=True)
-      print(traverseBorkHardCore(borkHC))
-   except NameError:
-      print("Not attempting hard core mode")
+print(traverseBork(bork))
+
+try:
+    borkHC = borkAutomator.Bork(hardCore=True)
+    print(traverseBorkHardCore(borkHC))
+except NameError:
+    print("Not attempting hard core mode")
 
