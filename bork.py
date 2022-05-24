@@ -57,12 +57,6 @@ def traverseBork(bork):
 
 # The hard core mode
 
-#Moves the player to its last spot
-def comeBack(memory):
-    bork.restart()
-    for exit in memory :
-        bork.move(exit)
-
 #Return the map in hard core mode
 def traverseBorkHardCore(bork):
     bork.restart()
@@ -80,7 +74,10 @@ def traverseBorkHardCore(bork):
         for exit in bork.exits() : 
             bork.move(exit)
             map[location][exit] = bork.description()
-            comeBack(memory)
+            #Come back to the last spot
+            bork.restart()
+            for exit in memory :
+                bork.move(exit)
             
         #Moves to the next unvisited spots
         while ( exitsNotInMap(map[location], map ) == True ) :
@@ -93,7 +90,9 @@ def traverseBorkHardCore(bork):
         #Comes back to the last spot
         if memory!=[]:
             memory.pop()
-        comeBack(memory)
+        bork.restart()
+        for exit in memory :
+            bork.move(exit)
        
     
     visiteOrCallbackHC(map, memory)
