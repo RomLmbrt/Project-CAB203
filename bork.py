@@ -1,11 +1,23 @@
 def traverseBork(bork):
-    
+    def notInMap(exits, map):
+       count = 0
+       for exit in map :
+          k = 0
+          for elt in map :
+             if elt == exit :
+                k+=1
+         if ( k!=0 ) :
+            count +=1
+      return (count == 0)
+      
     def visiteOrCallback(map, location, saveGame):
         map[location]=bork.exits(location)
         newSaveGame = bork.save()
         #something to visit
-        while there is a bork.exits(n) not in map :
-            visiteOrCallback(map, bork.exits(n)[not in map], newSaveGame)
+        while ( !(notInMap(map[location], map )) ) :
+           for exit in map[location] :
+              if (notInMap(exit, map)):
+            visiteOrCallback(map, exit, newSaveGame)
         #nothing to visit
         bork.restore(saveGame)
         
