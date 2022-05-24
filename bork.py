@@ -1,3 +1,4 @@
+def traverseBork(bork):
     
     def notInMap(exits, map):
         count = 0
