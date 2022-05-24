@@ -9,7 +9,7 @@ def traverseBork(bork):
          if ( k!=0 ) :
             count +=1
       return (count == 0)
-      
+
     def visiteOrCallback(map, location, saveGame):
         map[location]=bork.exits(location)
         newSaveGame = bork.save()
@@ -22,7 +22,8 @@ def traverseBork(bork):
         bork.restore(saveGame)
         
    # code your solution here
-    location = bork.restart()
+    bork.restart()
+    location = bork.description()
     saveGame = bork.save()
     map={}
     
